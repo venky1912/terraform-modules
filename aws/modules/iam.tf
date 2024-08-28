@@ -76,6 +76,12 @@ resource "aws_iam_role_policy_attachment" "eks-AmazonEBSCSIDriverPolicy" {
   role       = aws_iam_role.eks-nodegroup-role[count.index].name
 }
 
+# New policy attachment for EC2 Full Access
+resource "aws_iam_role_policy_attachment" "eks-AmazonEC2FullAccess" {
+  count      = var.is_eks_nodegroup_role_enabled ? 1 : 0
+  policy_arn = "arn:aws:iam::aws:policy/AmazonEC2FullAccess"
+  role       = aws_iam_role.eks-nodegroup-role[count.index].name
+}
 # OIDC
 resource "aws_iam_role" "eks_oidc" {
   assume_role_policy = data.aws_iam_policy_document.eks_oidc_assume_role_policy.json
